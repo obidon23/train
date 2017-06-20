@@ -10,54 +10,75 @@
 
 var database = firebase.database();
 
-var newTrainName;
-var newTrainDestination;
-var newTrainFirst;
-var newTrainFrequency;
-var newTrainNextArrival;
-var newTrainMinutesAway;
+
 var trainList;
 var dateAdded; 
 
-$("#results").html("<div class='col-lg-2 firstRow'>Train Name</div> <div class='col-lg-2 firstRow'>Destination</div><div class='col-lg-2 firstRow'>Frequency(min)</div><div class='col-lg-2 firstRow'>Next Arrival</div><div class='col-lg-2 firstRow'>Minutes Away</div>");
 console.log(moment());
+function setup() {
+database.ref('trains').orderByChild("Start").limitToLast(100).on("child_added", function(childSnapshot) {
 
-database.ref().orderByChild("Start").limitToLast(100).on("child_added", function(childSnapshot) {
-
-  trainList = $("#results").append("<div class='col-lg-2'>" + childSnapshot.val().name + "</div> <div class='col-lg-2'>"+ childSnapshot.val().Role + "</div><div class='col-lg-2'>"+ childSnapshot.val().Start + "</div><div class='col-lg-2'>"+ childSnapshot.val().Service + "</div><div class='col-lg-2'>" + childSnapshot.val().Rate +"</div><div class='col-lg-2'>"+ childSnapshot.val().total + "</div>");
+  trainList = $("#results").append(
+    "<div class='col-lg-2'>" + childSnapshot.val().name + 
+    "</div> <div class='col-lg-2'>" + childSnapshot.val().destination + 
+    "</div><div class='col-lg-2'>"+ childSnapshot.val().frequency + 
+    "</div><div class='col-lg-2'>"+ childSnapshot.val().nextArrival + 
+    "</div><div class='col-lg-4'>" + childSnapshot.val().minutesAway +
+    "</div>");
+  
     $("#results").append(trainList);
-  });
+  })
+};
 
 $(document).on("click", "#form", function(event) {
   event.preventDefault();
-  $("#results").html("<div class='col-lg-2 firstRow'>Train Name</div> <div class='col-lg-2 firstRow'>Destination</div><div class='col-lg-2 firstRow'>Frequency</div><div class='col-lg-2 firstRow'>Next Arrival</div><div class='col-lg-2 firstRow'>Minutes Away</div><div class='col-lg-2 firstRow'>Total Billed</div>");
 
-  newTrainName = $("#newTrainName").val().trim();
-  newTrainDestination = $("#newTrainDestination").val().trim();
-  newTrainFirst = $("#newTrainFirst").val().trim();
-  newTrainFrequency = $("#newTrainFrequency").val().trim();
-  newTrainMinutesAway = moment().format("HH:mm") % newTrainFirst;
-  newTrainNextArrival = moment().format("HH:mm") + newTrainMinutesAway;
+  var newTrainName = $("#newTrainName").val().trim();
+  var newTrainDestination = $("#newTrainDestination").val().trim();
+  var newTrainFirst = $("#newTrainFirst").val().trim();
+  var newTrainFrequency = $("#newTrainFrequency").val().trim();
+  var firstTime = newTrainFirst.split(":");
+  var firstHour = firstTime[0];
+  var firstMinutes = firstTime[1];
+  var firstTrain = 500 + firstMinutes;
+  var currentHours = moment().format("H");
+  var currentMinutes = moment().format("mm");
+  var currentTotal = ((currentHours * 60) + currentMinutes);
+  var difference = currentTotal - firstTrain;
+  var minutesAway = difference % newTrainFrequency;
+  var nextArrival = moment().add(minutesAway, "minutes").format("HH:mm");
 
-  database.ref().push({
+console.log(firstTrain);
+console.log(currentTotal);
+console.log(difference);
+console.log(nextArrival);
+
+  database.ref('trains').push({
     name: newTrainName,
     destination: newTrainDestination,
-    // first: newTrainFirst,
+    first: newTrainFirst,
     frequency: newTrainFrequency,
-    minutes: newTrainMinutesAway,
-    next: newTrainNextArrival,
+    minutesAway: minutesAway,
+    nextArrival: nextArrival,
     dateAdded: firebase.database.ServerValue.TIMESTAMP
   });
-  console.log("First: " + first + "Frequency: " + frequency + "Next: " + next + "Minutes Away:: " + minutes);
 
 $("#newTrainName").val("");
 $("#newTrainDestination").val("");
 $("#newTrainFirst").val("");
 $("#newTrainFrequency").val("");
-  $("#results").html("<div class='col-lg-2 firstRow'>Train Name</div> <div class='col-lg-2 firstRow'>Destination</div><div class='col-lg-2 firstRow'>Frequency(min)</div><div class='col-lg-2 firstRow'>Next Arrival</div><div class='col-lg-2 firstRow'>Minutes Away</div>");    $("#results").append(TrainList);
+
   database.ref().on("child_added", function(snapshot){
-    TrainList = $("#results").append("<div class='col-lg-2'>" + snapshot.val().name + "</div> <div class='col-lg-2'>"+ snapshot.val().destination + "</div><div class='col-lg-2'>"+ snapshot.val().first + "</div><div class='col-lg-2'>"+ snapshot.val().Service + "</div><div class='col-lg-2'>" + snapshot.val().Rate +"</div><div class='col-lg-2'>"+ snapshot.val().total + "</div>");
-    $("#results").append(TrainList);
+    trainList = $("#results").append(
+      "<div class='col-lg-2'>" + snapshot.val().name + 
+      "</div> <div class='col-lg-2'>"+ snapshot.val().destination + 
+      "</div><div class='col-lg-2'>"+ snapshot.val().frequency + 
+      "</div><div class='col-lg-2'>"+ snapshot.val().nextArrival + 
+      "</div><div class='col-lg-4'>" + snapshot.val().minutesAway +"</div>"
+      );
+    
+    $("#results").append(trainList);
   });
 });
 
+setup();
