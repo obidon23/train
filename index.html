@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta lang="en-us">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=yes">
+<!-- 	<i rel="shortcut icon" class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+ -->	<title>Train Tracking</title>
+	
+ 	<!-- <script src="https://use.fontawesome.com/a1ae226c56.js"></script> -->
+	<script src="https://www.gstatic.com/firebasejs/4.1.2/firebase.js"></script>
+
+	<script src="https://use.fontawesome.com/db78deb929.js"></script>
+	<!-- fonts for the site -->
+	<link href="https://fonts.googleapis.com/css?family=Titillium+Web" rel="stylesheet">
+
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+	
+	<!-- jQuery -->
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script src="https://momentjs.com/downloads/moment.min.js"></script>
+
+</head>
+
+<body>
+
+<script src="assets/js/script.js"></script>
+  <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
+
+</body>
+ 
+ <div class="containter">
+ 	<div class="row">
+ 		<div class="col-lg-8 col-lg-offset-2 jumbotron text-center">
+ 			<h1 class="h1 h1-default">
+ 				Welcome to Platform 9 3/4
+			</h1>
+			<p>
+				Don't train in vain. Keep on track with our scheduler!
+			</p>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-lg-8 col-lg-offset-2 results">
+
+			<div class="panel panel-primary">
+				<div class="panel-heading">Current Train Schedule
+				</div>
+
+				<div class="panel-body" id="results">
+				
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-lg-8 col-lg-offset-2 form">
+
+			<div class="panel panel-primary">
+				<div class="panel-heading">Add Train
+				</div>
+
+				<div class="panel-body">
+						<form>
+							Train Name <br />
+							<input type="text" label="Employee Name" id="newTrainName"><br />
+							Destination	 <br />
+							<input type="text" label="Destination" id="newTrainDestination"><br />
+							First Train (HH:mm military time) <br />
+							<input type="text" label="First" id="newTrainFirst"><br />
+							Frequency (in minutes) <br />
+							<input type="text" label="Frequency" id="newTrainFrequency"><br />
+							<input type="submit" value="submit" id="form">
+						</form>
+				<br/>
+				<br/>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	</div>
+</body>
+<!-- <script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyAgNHC-VGLRRDKwqrXPFZ7aoTerXRbOn8M",
+    authDomain: "employee-tracker-14caa.firebaseapp.com",
+    databaseURL: "https://employee-tracker-14caa.firebaseio.com",
+    projectId: "employee-tracker-14caa",
+    storageBucket: "employee-tracker-14caa.appspot.com",
+    messagingSenderId: "272673431516"
+  };
+  firebase.initializeApp(config);
+</script> -->
+</html>

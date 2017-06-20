@@ -1,0 +1,28 @@
+@font-face {
+	font-family: ParryHotter;
+	src: url(../fonts/ParryHotter.ttf);
+}
+
+html {
+	min-height: 100%;
+	display: block;
+}
+
+h1 {
+	font-family: 'ParryHotter', Times, serif;
+}
+.firstRow {
+	font-weight: bold;
+	border-bottom: 2px solid #444;
+}
+
+.footer {
+	height: 40px;
+	padding: 10px;
+	color: #fff;
+	text-align: center;
+	position: absolute;
+	bottom: 0;
+	background-color: #5566aa;
+	width: 100%;
+}
