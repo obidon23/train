@@ -8,8 +8,13 @@ html {
 	display: block;
 }
 
+.jumbotron {
+	background-color: maroon;
+}
 .h1 {
 	font-family: 'ParryHotter', Times, serif;
+	color: yellow;
+
 }
 .firstRow {
 	font-weight: bold;
@@ -20,6 +25,19 @@ html {
 	padding: 8px 15px;
 	border-bottom: 1px solid #999;
 }
+input {
+	padding: 5px 10px;
+	width: 100%;
+	margin: 10px 0;
+}
+
+input[type="submit"] {
+	background-color: blue;
+	color: #fff;
+	text-align: center;
+	width: 10%;
+}
+
 .footer {
 	height: 40px;
 	padding: 10px;
