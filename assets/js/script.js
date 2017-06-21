@@ -37,21 +37,22 @@ $(document).on("click", "#form", function(event) {
   var newTrainDestination = $("#newTrainDestination").val().trim();
   var newTrainFirst = $("#newTrainFirst").val().trim();
   var newTrainFrequency = $("#newTrainFrequency").val().trim();
-  var firstTime = newTrainFirst.split(":");
-  var firstHour = firstTime[0];
-  var firstMinutes = firstTime[1];
-  var firstTrain = 500 + firstMinutes;
-  var currentHours = moment().format("H");
-  var currentMinutes = moment().format("mm");
-  var currentTotal = ((currentHours * 60) + currentMinutes);
-  var difference = currentTotal - firstTrain;
-  var minutesAway = difference % newTrainFrequency;
-  var nextArrival = moment().add(minutesAway, "minutes").format("HH:mm");
 
-console.log(firstTrain);
-console.log(currentTotal);
-console.log(difference);
-console.log(nextArrival);
+ if ( !newTrainName || !newTrainDestination || !newTrainFirst || !newTrainFrequency ) return;
+  var firstValues = newTrainFirst.split(':');
+  var firstHours = firstValues[0];
+  var firstMinutes = firstValues[1];
+  var firstTrain = (firstHours * 60) + firstMinutes;
+  var currentHour = moment().format('H');
+  var currentMinute = moment().format('mm');
+  var current = (currentHour * 60) + currentMinute;
+  var difference = current - firstTrain;
+  var trains = difference % newTrainFrequency;
+  var minutesAway = newTrainFrequency - trains;
+  var arrivalTime = moment().add(minutesAway, 'minutes').format('HH:mm');
+
+  console.log(moment().format('HH:mm'), minutesAway, arrivalTime);
+
 
   database.ref('trains').push({
     name: newTrainName,
@@ -59,7 +60,7 @@ console.log(nextArrival);
     first: newTrainFirst,
     frequency: newTrainFrequency,
     minutesAway: minutesAway,
-    nextArrival: nextArrival,
+    nextArrival: arrivalTime,
     dateAdded: firebase.database.ServerValue.TIMESTAMP
   });
 
