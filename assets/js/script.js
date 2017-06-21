@@ -19,11 +19,11 @@ function setup() {
 database.ref('trains').orderByChild("Start").limitToLast(100).on("child_added", function(childSnapshot) {
 
   trainList = $("#results").append(
-    "<div class='col-lg-2'>" + childSnapshot.val().name + 
-    "</div> <div class='col-lg-2'>" + childSnapshot.val().destination + 
-    "</div><div class='col-lg-2'>"+ childSnapshot.val().frequency + 
-    "</div><div class='col-lg-2'>"+ childSnapshot.val().nextArrival + 
-    "</div><div class='col-lg-4'>" + childSnapshot.val().minutesAway +
+    "<div class='col-lg-3 newRow'>" + childSnapshot.val().name + 
+    "</div> <div class='col-lg-2 newRow'>" + childSnapshot.val().destination + 
+    "</div><div class='col-lg-2 newRow'>"+ childSnapshot.val().frequency + 
+    "</div><div class='col-lg-2 newRow'>"+ childSnapshot.val().nextArrival + 
+    "</div><div class='col-lg-3 newRow'>" + childSnapshot.val().minutesAway +
     "</div>");
   
     $("#results").append(trainList);
@@ -51,9 +51,6 @@ $(document).on("click", "#form", function(event) {
   var minutesAway = newTrainFrequency - trains;
   var arrivalTime = moment().add(minutesAway, 'minutes').format('HH:mm');
 
-  console.log(moment().format('HH:mm'), minutesAway, arrivalTime);
-
-
   database.ref('trains').push({
     name: newTrainName,
     destination: newTrainDestination,
@@ -71,11 +68,11 @@ $("#newTrainFrequency").val("");
 
   database.ref().on("child_added", function(snapshot){
     trainList = $("#results").append(
-      "<div class='col-lg-2'>" + snapshot.val().name + 
-      "</div> <div class='col-lg-2'>"+ snapshot.val().destination + 
-      "</div><div class='col-lg-2'>"+ snapshot.val().frequency + 
-      "</div><div class='col-lg-2'>"+ snapshot.val().nextArrival + 
-      "</div><div class='col-lg-4'>" + snapshot.val().minutesAway +"</div>"
+      "<div class='col-lg-3 newRow'>" + snapshot.val().name + 
+      "</div> <div class='col-lg-2 newRow'>"+ snapshot.val().destination + 
+      "</div><div class='col-lg-2 newRow'>"+ snapshot.val().frequency + 
+      "</div><div class='col-lg-2 newRow'>"+ snapshot.val().nextArrival + 
+      "</div><div class='col-lg-3 newRow'>" + snapshot.val().minutesAway +"</div>"
       );
     
     $("#results").append(trainList);
