@@ -9,14 +9,46 @@
   firebase.initializeApp(config);
 
 var database = firebase.database();
-
+var firstValues; 
+  var firstHours;
+  var firstMinutes;
+  var firstTrain;
+  var currentHourrmat;
+  var currentMinutes;
+  var current;
+  var differenceirstTrain;
+  var trains;
+  var minutesAway;
+  var arrivalTime;
 
 var trainList;
 var dateAdded; 
 
-console.log(moment());
+function update() {
+  database.ref('trains').orderByChild("name").limitToLast(100).on("child_added", function(childSnapshot) {
+    firstValues = childSnapshot.val().first.split(':');
+    firstHours = firstValues[0];
+    firstMinutes = firstValues[1];
+    firstTrain = (firstHours * 60) + (firstMinutes*1);
+    currentHour = moment().format('H');
+    currentMinute = moment().format('mm');
+    current = (currentHour * 60) + (currentMinute*1);
+    difference = current - firstTrain;
+    var frequency = (childSnapshot.val().frequency * 1);
+    trains = difference % frequency;
+    minutesAway = frequency - trains;
+    arrivalTime = moment().add(minutesAway, 'minutes').format('HH:mm');
+    console.log(childSnapshot.val().name + " is " + minutesAway + " minutes away and will arrive at " +arrivalTime);
+    database.ref('trains').child(childSnapshot.key).update({
+        minutesAway: minutesAway,
+        nextArrival: arrivalTime
+      });
+    });
+ 
+};
+
 function setup() {
-database.ref('trains').orderByChild("Start").limitToLast(100).on("child_added", function(childSnapshot) {
+database.ref('trains').orderByChild("name").limitToLast(100).on("child_added", function(childSnapshot) {
 
   trainList = $("#results").append(
     "<div class='col-lg-3 newRow'>" + childSnapshot.val().name + 
@@ -27,8 +59,8 @@ database.ref('trains').orderByChild("Start").limitToLast(100).on("child_added", 
     "</div>");
   
     $("#results").append(trainList);
-  })
-};
+  });
+}
 
 $(document).on("click", "#form", function(event) {
   event.preventDefault();
@@ -39,17 +71,17 @@ $(document).on("click", "#form", function(event) {
   var newTrainFrequency = $("#newTrainFrequency").val().trim();
 
  if ( !newTrainName || !newTrainDestination || !newTrainFirst || !newTrainFrequency ) return;
-  var firstValues = newTrainFirst.split(':');
-  var firstHours = firstValues[0];
-  var firstMinutes = firstValues[1];
-  var firstTrain = (firstHours * 60) + firstMinutes;
-  var currentHour = moment().format('H');
-  var currentMinute = moment().format('mm');
-  var current = (currentHour * 60) + currentMinute;
-  var difference = current - firstTrain;
-  var trains = difference % newTrainFrequency;
-  var minutesAway = newTrainFrequency - trains;
-  var arrivalTime = moment().add(minutesAway, 'minutes').format('HH:mm');
+  firstValues = newTrainFirst.split(':');
+  firstHours = firstValues[0];
+  firstMinutes = firstValues[1];
+  firstTrain = (firstHours * 60) + (firstMinutes*1);
+  currentHour = moment().format('H');
+  currentMinute = moment().format('mm');
+  current = (currentHour * 60) + (currentMinute*1);
+  difference = current - firstTrain;
+  trains = difference % newTrainFrequency;
+  minutesAway = newTrainFrequency - trains;
+  arrivalTime = moment().add(minutesAway, 'minutes').format('HH:mm');
 
   database.ref('trains').push({
     name: newTrainName,
@@ -60,6 +92,7 @@ $(document).on("click", "#form", function(event) {
     nextArrival: arrivalTime,
     dateAdded: firebase.database.ServerValue.TIMESTAMP
   });
+
 
 $("#newTrainName").val("");
 $("#newTrainDestination").val("");
@@ -79,4 +112,5 @@ $("#newTrainFrequency").val("");
   });
 });
 
+update();
 setup();

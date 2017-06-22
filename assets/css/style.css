@@ -8,14 +8,35 @@ html {
 	display: block;
 }
 
-.jumbotron {
-	background-color: maroon;
+body {
+	background-color: #fd6f00;
 }
+.header {
+	background-color: #9d3100;
+	margin-bottom: 10px;
+	padding-top: 50px;
+}
+
 .h1 {
 	font-family: 'ParryHotter', Times, serif;
-	color: yellow;
-
+	color: #ff824a;
+	font-size: 60px;
 }
+
+.h2 {
+	font-size: 40px;
+	color: #ff824a;
+}
+
+p {
+	color: #ff824a;
+}
+
+.panel-heading {
+	background-color: orange;
+}
+
+
 .firstRow {
 	font-weight: bold;
 	border-bottom: 2px solid #444;
