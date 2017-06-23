@@ -25,19 +25,31 @@ var trainList;
 var dateAdded; 
 
 function update() {
-  database.ref('trains').orderByChild("name").limitToLast(100).on("child_added", function(childSnapshot) {
+  database.ref('trains').orderByChild("name").limitToLast(100).once("child_added", function(childSnapshot) {
+    console.log("Child Added Update");
     firstValues = childSnapshot.val().first.split(':');
     firstHours = firstValues[0];
     firstMinutes = firstValues[1];
     firstTrain = (firstHours * 60) + (firstMinutes*1);
+    console.log(firstTrain);
     currentHour = moment().format('H');
     currentMinute = moment().format('mm');
     current = (currentHour * 60) + (currentMinute*1);
+    console.log(current);
     difference = current - firstTrain;
     var frequency = (childSnapshot.val().frequency * 1);
     trains = difference % frequency;
+    if (trains < 0) {
+        trains = trains * -1;
+        minutesAway = trains;
+    }
+    else {
     minutesAway = frequency - trains;
+      
+    }   
     arrivalTime = moment().add(minutesAway, 'minutes').format('HH:mm');
+    console.log(difference, frequency, trains);
+
     console.log(childSnapshot.val().name + " is " + minutesAway + " minutes away and will arrive at " +arrivalTime);
     database.ref('trains').child(childSnapshot.key).update({
         minutesAway: minutesAway,
@@ -49,6 +61,7 @@ function update() {
 
 function setup() {
 database.ref('trains').orderByChild("name").limitToLast(100).on("child_added", function(childSnapshot) {
+    console.log("Child Added setup");
 
   trainList = $("#results").append(
     "<div class='col-lg-3 newRow'>" + childSnapshot.val().name + 
@@ -64,7 +77,7 @@ database.ref('trains').orderByChild("name").limitToLast(100).on("child_added", f
 
 $(document).on("click", "#form", function(event) {
   event.preventDefault();
-
+  $('#results').empty();
   var newTrainName = $("#newTrainName").val().trim();
   var newTrainDestination = $("#newTrainDestination").val().trim();
   var newTrainFirst = $("#newTrainFirst").val().trim();
@@ -99,7 +112,8 @@ $("#newTrainDestination").val("");
 $("#newTrainFirst").val("");
 $("#newTrainFrequency").val("");
 
-  database.ref().on("child_added", function(snapshot){
+database.ref('trains').on("child_added", function(snapshot){
+
     trainList = $("#results").append(
       "<div class='col-lg-3 newRow'>" + snapshot.val().name + 
       "</div> <div class='col-lg-2 newRow'>"+ snapshot.val().destination + 
@@ -109,8 +123,10 @@ $("#newTrainFrequency").val("");
       );
     
     $("#results").append(trainList);
-  });
 });
+});
+
+
 
 update();
 setup();
